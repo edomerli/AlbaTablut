@@ -44,7 +44,9 @@ class Piece:
         output = []
         for direction in self.get_possible_moves(board):
             for square in direction:
-                if square.occupying_piece is not None or square.type == CASTLE_TYPE or (square.type == CAMP_TYPE and (self.color == WHITE or prev_square.type != CAMP_TYPE)):
+                if (square.occupying_piece is not None or 
+                    square.type == CASTLE_TYPE or 
+                    (square.type == CAMP_TYPE and (self.color == WHITE or prev_square.type != CAMP_TYPE))):
                     break
                 else:
                     output.append(square)
@@ -53,7 +55,8 @@ class Piece:
     
     def move(self, board, square):
         for i in board.squares:
-            i.highlight = False
+            for j in i:    
+                j.highlight = False
 
         if square in self.get_moves(board):   # perform movement
             prev_square = board.get_square_from_pos(self.pos)
@@ -61,6 +64,9 @@ class Piece:
             prev_square.occupying_piece = None
             square.occupying_piece = self
             board.selected_piece = None
+
+            if self.king:
+                board.king_square = square
 
             for d in DIRS:
                 # mid stands for "middle", os stands for "other side"
@@ -78,7 +84,7 @@ class Piece:
                                 if all(p is not None and p.color == BLACK for p in pieces):
                                     board.king_capture = True
                                     mid_square.occupying_piece = None
-                            elif mid_square.pos in ADJ_CASTLE:
+                            elif mid_square.type == ADJ_CASTLE_TYPE:
                                 if all(((sq.occupying_piece is not None and sq.occupying_piece.color == BLACK) or sq.type == CASTLE_TYPE) for sq in mid_square.adj_squares(board)): 
                                     board.king_capture = True
                                     mid_square.occupying_piece = None
@@ -87,7 +93,9 @@ class Piece:
                                 mid_square.occupying_piece = None
                             
                         else:
-                            if (os_piece is not None and os_piece.color == self.color) or os_square.type == CASTLE_TYPE or (os_square.type == CAMP_TYPE and mid_square.type != CAMP_TYPE):
+                            if ((os_piece is not None and os_piece.color == self.color) or 
+                                os_square.type == CASTLE_TYPE or 
+                                (os_square.type == CAMP_TYPE and mid_square.type != CAMP_TYPE)):
                                 mid_square.occupying_piece = None
 
             return True

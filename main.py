@@ -4,6 +4,7 @@ from Board import Board
 from utils import *
 from AI import *
 
+# Comment next 2 lines and copy/uncomment them in utils.py to visualize simulation 
 pygame.init()
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -18,7 +19,7 @@ def draw(display):
 
 if __name__ == '__main__':
 	running = True
-	ai_player = None
+	ai_player = BLACK_PLAYER
 
 	if ai_player != None:
 		ai = AI(AI_BUDGET)

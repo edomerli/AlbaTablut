@@ -19,7 +19,7 @@ class AI:
             board (Board): the board configuration to start from
 
         Returns:
-            The action to take and it's predicted win rate
+            The action to take and its predicted win rate
         """
         root = Node(board)
         self.root_board = board

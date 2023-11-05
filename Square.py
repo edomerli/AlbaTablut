@@ -48,6 +48,11 @@ class Square:
             self.height
         )
 
+    def __eq__(self, other):
+        # Defined in order to make the check of a square belonging to a list of squares faster
+        # A square is defined by its position in this case
+        return self.x == other.x and self.y == other.y
+
     def draw(self, display):
         # configures if tile should be light or dark or highlighted tile
         if self.highlight:

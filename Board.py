@@ -1,5 +1,6 @@
 import pygame
 import random
+import time     #TODO: remove
 
 from Square import Square
 from Piece import Piece
@@ -15,23 +16,27 @@ class Board:
         self.selected_piece = None
         self.turn = WHITE_PLAYER
 
+        self.king_square = None
+        self.king_capture = False
+
         self.squares = self.generate_squares()
         self.setup_board()
-        self.king_capture = False
 
     def generate_squares(self):
         output = []
+        row = []
         for y in range(9):
             for x in range(9):
-                output.append(
+                row.append(
                     Square(x,  y, self.tile_width, self.tile_height)
                 )
+            output.append(row)
+            row = []
+
         return output
 
     def get_square_from_pos(self, pos):
-        for square in self.squares:
-            if (square.x, square.y) == (pos[0], pos[1]):
-                return square
+        return self.squares[pos[1]][pos[0]]
 
     def get_piece_from_pos(self, pos):
         return self.get_square_from_pos(pos).occupying_piece
@@ -44,6 +49,8 @@ class Board:
                     square.occupying_piece = Piece(
                         (x, y), WHITE if piece == 'w' or piece == 'k' else BLACK
                     )
+                    if piece == 'k':
+                        self.king_square = square
 
     def handle_click(self, mx, my):
         x = mx // self.tile_width
@@ -53,7 +60,7 @@ class Board:
             if clicked_square.occupying_piece is not None:
                 if clicked_square.occupying_piece.color == self.turn:
                     self.selected_piece = clicked_square.occupying_piece
-        elif self.selected_piece.move(self, clicked_square):        #TODO: BIG PROBLEM!! move must do this implicitly if the move was successful (fixed below by changing take_action, double check logic)
+        elif self.selected_piece.move(self, clicked_square):
             self.turn = 1 - self.turn
         elif clicked_square.occupying_piece is not None:
             if clicked_square.occupying_piece.color == self.turn:
@@ -63,14 +70,15 @@ class Board:
     def is_inside(self, pos):
         return pos[0] >= 0 and pos[0] < GRID_COUNT and pos[1] >= 0 and pos[1] < GRID_COUNT
 
-    def king(self):
-        for s in self.squares:
-            if s.occupying_piece is not None and s.occupying_piece.king:
-                return s.occupying_piece
-        raise Exception()
+    # def king_square(self):
+    #     for row in self.squares:
+    #         for s in row:
+    #             if s.occupying_piece is not None and s.occupying_piece.king:
+    #                 return s
+    #     raise Exception()
 
     def king_escaped(self):
-        return self.king().pos in ESCAPES
+        return self.king_square.type == ESCAPE_TYPE
 
     def king_captured(self):
         return self.king_capture
@@ -84,8 +92,9 @@ class Board:
                 square.highlight = True
         
         # draw squares
-        for square in self.squares:
-            square.draw(display)
+        for row in self.squares:
+            for square in row:
+                square.draw(display)
 
         # draw horizontal lines
         for r in range(GRID_COUNT + 1):
@@ -102,12 +111,13 @@ class Board:
 
     def actions(self):
         output = []
-        for s in self.squares:
-            p = s.occupying_piece
-            if p is not None and p.color == self.turn:
-                moves = p.get_moves(self)
-                if len(moves) > 0:
-                    output.append([p.pos, [z.pos for z in moves]])
+        for row in self.squares:
+            for s in row:
+                p = s.occupying_piece
+                if p is not None and p.color == self.turn:
+                    moves = p.get_moves(self)
+                    if len(moves) > 0:
+                        output.append([s.pos, [z.pos for z in moves]])
         return output
 
     def take_action(self, action):
@@ -132,11 +142,18 @@ class Board:
         while True:
             end, winner = self.check_end_game()
             if end:
+                # input("Enter any key")  # TODO: remove - Just to stop after every simulated game
                 return winner
             
-            # TODO: use the same code between here and AI for random choice generation
+            # TODO: use the same code between here and AI for random choice generation (?)
             possible_actions = self.actions()
             i = random.randint(0, len(possible_actions)-1)
             j = random.randint(0, len(possible_actions[i][1])-1)
             action = [possible_actions[i][0], possible_actions[i][1][j]]
             self.take_action(action)
+            
+            # TODO: remove -- just to visualize the simulation
+            # screen.fill('white')
+            # self.draw(screen)
+            # pygame.display.update()
+            # time.sleep(1)

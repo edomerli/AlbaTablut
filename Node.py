@@ -7,7 +7,7 @@ class Node:
         self.untried_actions = board.actions()
 
         self.parent = parent
-        self.action = action
+        self.action = action    # the action that from the parent's board lead to this Node's board
 
         self.w = 0
         self.n = 0
