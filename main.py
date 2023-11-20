@@ -1,4 +1,5 @@
 import pygame
+from pathlib import Path
 
 from Board import Board
 from utils import *
@@ -19,28 +20,30 @@ def draw(display):
 
 if __name__ == '__main__':
 	running = True
-	ai_player = BLACK_PLAYER
 
-	if ai_player != None:
-		ai = AI(AI_BUDGET)
+	ai_color = BLACK_PLAYER
+	
+	# if ai_color is not None:
+	# 	ai = AI(AI_BUDGET)
 
 	draw(screen)
 
 	while running:
-		if ai_player == board.turn:
-			action, pred_win_rate = ai.MCTS(board)
-			print(action, pred_win_rate)
-			board.take_action(action)
-		else:
-			mx, my = pygame.mouse.get_pos()
-			for event in pygame.event.get():
-				# Quit the game if the user presses the close button
-				if event.type == pygame.QUIT:
-					running = False
-				elif event.type == pygame.MOUSEBUTTONDOWN: 
-					# If the mouse is clicked
-					if event.button == 1:
-						board.handle_click(mx, my)
+		# if ai_color == board.turn:
+		# 	action, pred_win_rate = ai.MCTS(board)
+		# 	print(action, pred_win_rate)
+		# 	board.take_action(action)
+		# else:
+		mx, my = pygame.mouse.get_pos()
+		for event in pygame.event.get():
+			# Quit the game if the user presses the close button
+			if event.type == pygame.QUIT:
+				running = False
+			elif event.type == pygame.MOUSEBUTTONDOWN: 
+				# If the mouse is clicked
+				if event.button == 1:
+					board.handle_click(mx, my)
+		print("QUI")
 
 		end, winner = board.check_end_game()
 		if end:

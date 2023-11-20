@@ -1,6 +1,7 @@
 import pygame
 import random
-import time     #TODO: remove
+import numpy as np
+import torch
 
 from Square import Square
 from Piece import Piece
@@ -118,7 +119,7 @@ class Board:
                     moves = p.get_moves(self)
                     if len(moves) > 0:
                         output.append([s.pos, [z.pos for z in moves]])
-        return output
+        return output      
 
     def take_action(self, action):
         pos_start, pos_end = action
@@ -135,7 +136,114 @@ class Board:
         if len(self.actions()) == 0:
             return True, 1 - self.turn
         return False, None
+
     
+    def to_onehot_tensor(self):
+        tensor = np.zeros((3, 9, 9))     # index 0 for black, 1 for white and 2 for king
+        for x in range(9):
+            for y in range(9):
+                piece = self.get_piece_from_pos((x, y))
+                if piece is None:
+                    continue
+                
+                i = None
+                if piece.king: 
+                    i = 2
+                elif piece.color == WHITE:
+                    i = 1
+                elif piece.color == BLACK:
+                    i = 0
+                
+                if i is not None:
+                    tensor[i, y, x] = 1
+        return torch.from_numpy(tensor).float().unsqueeze(0)
+    
+    def legal_actions_array(self):
+        tensor = np.zeros((9, 9, 32))   # 4 (num dirs) * 8 (max ray) = 32
+        
+
+        actions = self.actions()
+        for pos_start, pos_ends in actions:
+            for pos_end in pos_ends:
+                
+                if pos_start[0] == pos_end[0]:
+                    i = pos_end[1] - pos_start[1]
+                    i -= 1 if i > 0 else 0
+                    i += 8
+
+                elif pos_start[1] == pos_end[1]:
+                    i = pos_end[0] - pos_start[0]
+                    i -= 1 if i > 0 else 0
+                    i += 8 + 16
+                
+                else:
+                    raise ValueError
+                
+                tensor[pos_start[0], pos_start[1], i] = 1
+
+        tensor = tensor.ravel()     # flatten tensor
+        return tensor
+    
+    def promising_actions_array(self, player):
+        if player == WHITE_PLAYER:
+            output = []
+            found = False
+            for row in self.squares:
+                for s in row:
+                    p = s.occupying_piece
+                    if p is not None and p.king:
+                        found = True
+                        moves = p.get_moves(self)
+                        if len(moves) > 0:
+                            output.append([s.pos, [z.pos for z in moves]])
+                        break
+                if found:  
+                    break 
+            return output 
+        else:
+            output = []
+            found = False
+            for row in self.squares:
+                for s in row:
+                    p = s.occupying_piece
+                    if p is not None and p.king:
+                        found = True
+                        for direction in p.get_possible_moves(self):
+                            for square in direction:
+                                if square.occupying_piece is not None and square.occupying_piece.color == BLACK:
+                                    moves = square.occupying_piece.get_moves(self)
+                                    if len(moves) > 0:
+                                        output.append([square.pos, [z.pos for z in moves]])
+                                    break
+                                if (square.occupying_piece is not None or 
+                                    square.type == CASTLE_TYPE or 
+                                    square.type == CAMP_TYPE):
+                                    break
+
+                        break
+                if found:  
+                    break 
+            return output   
+
+    
+    def index_to_action(self, index):
+        z = index % 32
+        index //= 32
+        y = index % 9
+        index //= 9
+        x = index
+
+        if z >= 16:
+            z -= 16 + 8
+            z += 1 if z >= 0 else 0
+            pos_start = (x, y)
+            pos_end = (x + z, y)
+        else:
+            z -= 8
+            z += 1 if z >= 0 else 0
+            pos_start = (x, y)
+            pos_end = (x, y + z)
+        return pos_start, pos_end
 
 
     def simulate_game(self):
@@ -145,14 +253,12 @@ class Board:
                 # input("Enter any key")  # TODO: remove - Just to stop after every simulated game
                 return winner
             
-            # TODO: use the same code between here and AI for random choice generation (?)
             possible_actions = self.actions()
             i = random.randint(0, len(possible_actions)-1)
             j = random.randint(0, len(possible_actions[i][1])-1)
             action = [possible_actions[i][0], possible_actions[i][1][j]]
             self.take_action(action)
             
-            # TODO: remove -- just to visualize the simulation
             # screen.fill('white')
             # self.draw(screen)
             # pygame.display.update()

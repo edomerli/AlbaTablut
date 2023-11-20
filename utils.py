@@ -1,5 +1,3 @@
-import pygame   #TODO remove
-
 INITIAL_CONFIG = [
             ['', '', '', 'b', 'b', 'b', '', '', ''],
             ['', '', '', '', 'b', '', '', '', ''],
@@ -41,10 +39,5 @@ WIDTH = 0
 
 DIRS = [[-1, 0], [0, -1], [0, 1], [1, 0]]
 
-AI_BUDGET = 100
-
-# TODO: remove eventually
-# Uncomment if you want to see a simulation playing out, maybe add a timer tho s.t. I can see the moves during the simulation...
-# pygame.init()
-
-# screen = pygame.display.set_mode(WINDOW_SIZE)
+AI_BUDGET = 200    # 1600 is how many simulation AlphaZero uses
+NUM_ACTIONS = 9 * 9 * 32

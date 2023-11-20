@@ -1,6 +1,11 @@
-* Refactor code of the game in order to simulate games faster
+* ~~Refactor code of the game in order to simulate games faster~~
+* masking
+* using the AIs to do the simulation part
+* take only a subset of the actions (e.g. summing to 0.8) outputted by the model as the mcts untried actions, or only the actions whose probability is greater than a threshold
+* ((Try adding the NN in the simulation as well to see if improves the quality of the simulation or its cost slows down))
+* Data augmentation by exploiting the (8) simmetries of the game
+* Add 8 step history of previously played moves in the game (how to deal with the first 8 moves of the game? I.e. don't have enought history)
+
 * Implement multithreaded simulation as the guy does in https://github.com/nikcheerla/alphazero/blob/master/mcts.py in order to simulate many games at the same time starting from an expanded node -> get a better estimate of its score (i.e. mean of the winners I guess...)
-* Implement a simple NN trained on every backpropagation step, similarly to https://nikcheerla.github.io/deeplearningschool/2018/01/01/AlphaZero-Explained/ but aggregating boards and scores to a minibatch first (or maybe is better to not do so, such that I don't have to create many copies of the board) -- Or in alternative can try to implement an experience replay buffer, i.e. store many transitions and 
-* Try adding the NN in the simulation as well to see if improves the quality of the simulation or its cost slows down 
 * Try implementing RL with Fast and Forgetful Memory from paper https://arxiv.org/abs/2310.04128
 * Ask Andreji from UCSD on Linkedin about its technique after sending him the code
