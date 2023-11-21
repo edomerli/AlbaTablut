@@ -123,7 +123,9 @@ class Board:
 
     def take_action(self, action):
         pos_start, pos_end = action
-        if self.get_piece_from_pos(pos_start).move(self, self.get_square_from_pos(pos_end)):
+        successful = self.get_piece_from_pos(pos_start).move(self, self.get_square_from_pos(pos_end))
+        assert successful
+        if successful:
             self.turn = 1 - self.turn
 
 
@@ -184,9 +186,9 @@ class Board:
         tensor = tensor.ravel()     # flatten tensor
         return tensor
     
-    def promising_actions_array(self, player):
+    def promising_actions_array(self, player, return_tensor = True):
         if player == WHITE_PLAYER:
-            output = []
+            actions = []
             found = False
             for row in self.squares:
                 for s in row:
@@ -195,36 +197,65 @@ class Board:
                         found = True
                         moves = p.get_moves(self)
                         if len(moves) > 0:
-                            output.append([s.pos, [z.pos for z in moves]])
+                            actions.append([s.pos, [z.pos for z in moves]])
                         break
                 if found:  
                     break 
-            return output 
         else:
-            output = []
+            actions = []
             found = False
             for row in self.squares:
                 for s in row:
                     p = s.occupying_piece
                     if p is not None and p.king:
                         found = True
-                        for direction in p.get_possible_moves(self):
-                            for square in direction:
-                                if square.occupying_piece is not None and square.occupying_piece.color == BLACK:
-                                    moves = square.occupying_piece.get_moves(self)
-                                    if len(moves) > 0:
-                                        output.append([square.pos, [z.pos for z in moves]])
-                                    break
-                                if (square.occupying_piece is not None or 
-                                    square.type == CASTLE_TYPE or 
-                                    square.type == CAMP_TYPE):
-                                    break
+
+                        neigh_squares = []
+                        for sq in s.adj_squares(self):
+                            if self.is_inside(sq.pos) and sq.occupying_piece is None and sq.type != CASTLE_TYPE and sq.type != CAMP_TYPE:
+                                neigh_squares.append(sq)
+                            
+                        for sq in neigh_squares:
+                            for direction in sq.get_possible_moves(self):
+                                tiles = [sq.pos]
+                                for square in direction:
+                                    if square.occupying_piece is not None and square.occupying_piece.color == BLACK:
+                                        if len(tiles) > 0:
+                                            actions.append([square.pos, tiles])
+                                        break
+                                    tiles.append(square.pos)
+                                    if (square.occupying_piece is not None or 
+                                        square.type == CASTLE_TYPE or 
+                                        square.type == CAMP_TYPE):
+                                        break
 
                         break
                 if found:  
                     break 
-            return output   
+        if not return_tensor:
+            return actions
+        print(actions)
+        tensor = np.zeros((9, 9, 32))  
+        for pos_start, pos_ends in actions:
+            for pos_end in pos_ends:
+                
+                if pos_start[0] == pos_end[0]:
+                    i = pos_end[1] - pos_start[1]
+                    i -= 1 if i > 0 else 0
+                    i += 8
 
+                elif pos_start[1] == pos_end[1]:
+                    i = pos_end[0] - pos_start[0]
+                    i -= 1 if i > 0 else 0
+                    i += 8 + 16
+                
+                else:
+                    raise ValueError
+                
+                tensor[pos_start[0], pos_start[1], i] = 1
+
+        tensor = tensor.ravel()     # flatten tensor
+        return tensor
     
     def index_to_action(self, index):
         z = index % 32
@@ -253,7 +284,9 @@ class Board:
                 # input("Enter any key")  # TODO: remove - Just to stop after every simulated game
                 return winner
             
-            possible_actions = self.actions()
+            possible_actions = self.promising_actions_array(self.turn, return_tensor=False)
+            if possible_actions == []:
+                possible_actions = self.actions()
             i = random.randint(0, len(possible_actions)-1)
             j = random.randint(0, len(possible_actions[i][1])-1)
             action = [possible_actions[i][0], possible_actions[i][1][j]]

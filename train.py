@@ -70,18 +70,22 @@ if __name__ == '__main__':
 
         if visualize:
             draw(screen, board)
+        z = 0
         while running:
-            start = time.process_time()
-            
+            # start = time.process_time()
             if board.turn == WHITE_PLAYER:
                 action, pred_win_rate, root_pi = ai_white.MCTS(board)
-                print("White's turn played with pred win rate", pred_win_rate)
+                # print("White's turn played with pred win rate", pred_win_rate)
+                z += 1
+                print(f"{z} - W: {action},     ", end='')
 
             else:
                 action, pred_win_rate, root_pi = ai_black.MCTS(board)
-                print("Black's turn played with pred win rate", pred_win_rate)
+                # print("Black's turn played with pred win rate", pred_win_rate)
+                print(f"B: {action}")
+
             
-            print(f"Time taken for action: {time.process_time() - start}")
+            # print(f"Time taken for action: {time.process_time() - start}")
 
             game_states.append(board.to_onehot_tensor().squeeze())
             game_pis.append(torch.from_numpy(root_pi).float())

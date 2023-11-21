@@ -88,7 +88,7 @@ class AI:
         # avoid it because I'm doing it inside _generate_search_policy, but let's see if it's better to do it in the model as well
         
         if root_noise:
-            pi = self._add_dirichlet_noise(pi, self.root_board.legal_actions_array(), self.root_board.promising_actions_array(self.root_board.turn))
+            pi = self._add_dirichlet_noise(pi, self.root_board.legal_actions_array(), promising_actions=self.root_board.promising_actions_array(self.root_board.turn))
 
         root = Node(board, pi=pi, parent=DummyNode())
 
@@ -125,10 +125,12 @@ class AI:
             The selected node to be expanded
         """
         n = root   
-
+        # print("\n-------------")
+        i = 0
         while n.is_expanded:
             new_node = self._best_child(n, self.search_board.legal_actions_array(), c=1)[0]  # this will create a new unexpanded node if needed
-            
+            # print(i, end=' ')
+            # i += 1
             self.search_board.take_action(self.search_board.index_to_action(new_node.action))
             n = new_node
         return n
@@ -149,6 +151,7 @@ class AI:
         
         new_board_tensor = self.search_board.to_onehot_tensor()
         pi, v = self.alphazero(new_board_tensor)
+        v = 1 if node.turn == self.search_board.simulate_game() else -1
         node.set_pi(pi.detach().numpy().ravel())
 
         node.is_expanded = True
@@ -183,6 +186,9 @@ class AI:
         puct_scores = - parent.child_W / (parent.child_N + 1e-5) + c * parent.pi * sqrt_parent_visits / (parent.child_N + 1)
 
         puct_scores = np.where(legal_actions == 1, puct_scores, -9999)
+        if c == 0:
+            print(sum(np.where(legal_actions == 1, puct_scores, 0)))
+            # print((puct_scores >= -1).sum())
             
         best_action = np.argmax(puct_scores)
 
@@ -200,14 +206,21 @@ class AI:
         #TODO: add temperature
         return root.child_N / np.sum(root.child_N)  # normalize visits
     
-    def _add_dirichlet_noise(self, pi, legal_actions, eps=0.25, alpha=30.0):
+    def _add_dirichlet_noise(self, pi, legal_actions, promising_actions=None, eps=0.25, alpha=30.0):
         alphas = np.ones_like(legal_actions) * alpha
         noise = legal_actions * np.random.dirichlet(alphas)
+
         noise = noise / noise.sum()  # normalize
+        pi = (1 - eps) * pi + eps * noise
+
+        if promising_actions is not None and promising_actions.sum() > 1:
+            pi = promising_actions * pi
+            pi = pi / pi.sum()
+    
         # print(sum(pi))
         # print(noise)
         # print(sum(noise))
         # print(sum((1 - eps) * pi + eps * noise))
-        return (1 - eps) * pi + eps * noise
+        return pi
 
 

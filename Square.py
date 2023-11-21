@@ -70,3 +70,31 @@ class Square:
                 
     def adj_squares(self, board):
         return [board.get_square_from_pos([self.x + d[0], self.y + d[1]]) for d in DIRS]
+    
+    def get_possible_moves(self, board):
+        output = []
+        moves_north = []
+        for y in range(self.y)[::-1]:
+            moves_north.append(board.get_square_from_pos(
+                (self.x, y)
+            ))
+        output.append(moves_north)
+        moves_east = []
+        for x in range(self.x + 1, GRID_COUNT):
+            moves_east.append(board.get_square_from_pos(
+                (x, self.y)
+            ))
+        output.append(moves_east)
+        moves_south = []
+        for y in range(self.y + 1, GRID_COUNT):
+            moves_south.append(board.get_square_from_pos(
+                (self.x, y)
+            ))
+        output.append(moves_south)
+        moves_west = []
+        for x in range(self.x)[::-1]:
+            moves_west.append(board.get_square_from_pos(
+                (x, self.y)
+            ))
+        output.append(moves_west)
+        return output
