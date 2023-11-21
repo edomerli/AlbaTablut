@@ -1,5 +1,6 @@
-* ~~Refactor code of the game in order to simulate games faster~~
-* masking
+* Data augmentation!
+* Add logging to W&B to see training progress
+
 * using the AIs to do the simulation part
 * take only a subset of the actions (e.g. summing to 0.8) outputted by the model as the mcts untried actions, or only the actions whose probability is greater than a threshold
 * ((Try adding the NN in the simulation as well to see if improves the quality of the simulation or its cost slows down))

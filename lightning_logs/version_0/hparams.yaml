@@ -1,0 +1,8 @@
+input_shape: !!python/tuple
+- 3
+- 9
+- 9
+num_actions: 2592
+num_fc_units: 128
+num_filters: 128
+num_res_block: 9
