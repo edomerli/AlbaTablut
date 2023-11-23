@@ -6,6 +6,7 @@ import numpy as np
 import torch
 import collections
 from typing import Mapping
+import time
 
 from AlphaZeroNet import AlphaZeroNet
 from utils import *
@@ -70,7 +71,7 @@ class AI:
         self.alphazero = None
         self.opponent = None
 
-    def MCTS(self, board, root_noise = True):
+    def MCTS(self, board, timeout=60, root_noise = True):
         """Perform Monte Carlo Tree Search starting from a board configuration
 
         Args:
@@ -78,6 +79,11 @@ class AI:
         Returns:
             The action to take and its predicted win rate
         """
+        assert timeout > 0
+        timeout -= 5   # keep 5 seconds to be safe
+
+        start_time = time.process_time()
+
         self.root_board = board
         pi, _ = self.alphazero(self.root_board.to_onehot_tensor())
         pi = pi.detach().numpy().ravel()
@@ -87,9 +93,11 @@ class AI:
 
         root = Node(board, pi=pi, parent=DummyNode())
 
-        iters = 0
 
-        while iters < self.budget:
+        # iters = 0
+        # while iters < self.budget:    # to work with iterations instead of time
+
+        while  time.process_time() - start_time < timeout:
             self.search_board = copy.deepcopy(board)
 
             node_to_expand = self._select(root)
@@ -99,13 +107,12 @@ class AI:
                 v = self._expand(node_to_expand)
             self._backpropagate(node_to_expand, v)
     
-            iters += 1
+            # iters += 1
             # if ((iters + 1) % 100 == 0):
             #     print(f"Iterations/budget: {iters + 1}/{self.budget}")
     
         root_legal_actions = self.root_board.legal_actions_array()
         best_child, action, action_win_rate = self._best_child(root, root_legal_actions, c=0)   # Note: action_win_rate is in range [-1, 1]
-        
         
         return self.root_board.index_to_action(action), action_win_rate, self._generate_search_policy(root, root_legal_actions)
 

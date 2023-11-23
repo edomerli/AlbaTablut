@@ -1,13 +1,13 @@
 INITIAL_CONFIG = [
-            ['', '', '', 'b', 'b', 'b', '', '', ''],
-            ['', '', '', '', 'b', '', '', '', ''],
-            ['', '', '', '', 'w', '', '', '', ''],
-            ['b', '', '', '', 'w', '', '', '', 'b'],
-            ['b', 'b', 'w', 'w', 'k', 'w', 'w', 'b', 'b'],
-            ['b', '', '', '', 'w', '', '', '', 'b'],
-            ['', '', '', '', 'w', '', '', '', ''],
-            ['', '', '', '', 'b', '', '', '', ''],
-            ['', '', '', 'b', 'b', 'b', '', '', '']
+            ['EMPTY', 'EMPTY', 'EMPTY', 'BLACK', 'BLACK', 'BLACK', 'EMPTY', 'EMPTY', 'EMPTY'],
+            ['EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'BLACK', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY'],
+            ['EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'WHITE', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY'],
+            ['BLACK', 'EMPTY', 'EMPTY', 'EMPTY', 'WHITE', 'EMPTY', 'EMPTY', 'EMPTY', 'BLACK'],
+            ['BLACK', 'BLACK', 'WHITE', 'WHITE', 'KING', 'WHITE', 'WHITE', 'BLACK', 'BLACK'],
+            ['BLACK', 'EMPTY', 'EMPTY', 'EMPTY', 'WHITE', 'EMPTY', 'EMPTY', 'EMPTY', 'BLACK'],
+            ['EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'WHITE', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY'],
+            ['EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'BLACK', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY'],
+            ['EMPTY', 'EMPTY', 'EMPTY', 'BLACK', 'BLACK', 'BLACK', 'EMPTY', 'EMPTY', 'EMPTY']
         ]
 
 ESCAPES = [(x, y) for x in [0, 8] for y in [1, 2, 6, 7]] + [(x, y) for y in [0, 8] for x in [1, 2, 6, 7]]

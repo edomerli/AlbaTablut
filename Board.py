@@ -8,20 +8,27 @@ from Piece import Piece
 from utils import *
 
 class Board:
-    def __init__(self, width, height):
+    def __init__(self, width, height, configuration=None, turn=None):
         self.width = width
         self.height = height
         self.tile_width = width // GRID_COUNT
         self.tile_height = height // GRID_COUNT
 
         self.selected_piece = None
-        self.turn = WHITE_PLAYER
+        
+        if turn is None:
+            self.turn = WHITE_PLAYER
+        else:
+            self.turn = WHITE_PLAYER if turn == 'WHITE' else BLACK_PLAYER
 
         self.king_square = None
         self.king_capture = False
 
         self.squares = self.generate_squares()
-        self.setup_board()
+        if configuration is None:
+            self.setup_board(INITIAL_CONFIG)
+        else:
+            self.setup_board(configuration)
 
     def generate_squares(self):
         output = []
@@ -42,15 +49,15 @@ class Board:
     def get_piece_from_pos(self, pos):
         return self.get_square_from_pos(pos).occupying_piece
     
-    def setup_board(self):
-        for y, row in enumerate(INITIAL_CONFIG):
+    def setup_board(self, configuration):
+        for y, row in enumerate(configuration):
             for x, piece in enumerate(row):
-                if piece != '':
+                if piece != 'EMPTY':
                     square = self.get_square_from_pos((x, y))
                     square.occupying_piece = Piece(
-                        (x, y), WHITE if piece == 'w' or piece == 'k' else BLACK
+                        (x, y), WHITE if piece == 'WHITE' or piece == 'KING' else BLACK
                     )
-                    if piece == 'k':
+                    if piece == 'KING':
                         self.king_square = square
 
     def handle_click(self, mx, my):
