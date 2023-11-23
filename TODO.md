@@ -1,5 +1,8 @@
-* Data augmentation!
-* Add logging to W&B to see training progress
+* ~~Data augmentation! -> hard because I must change pi (one-hot) as well as the board (flipped) because action changes~~
+* ~~Add logging to W&B to see training progress -> log the 2 losses separately~~
+* ~~Learning rate schedule~~
+* ~~Label smoothing~~
+* ...guarda su MLCV se altre cose aiutano...
 
 * using the AIs to do the simulation part
 * take only a subset of the actions (e.g. summing to 0.8) outputted by the model as the mcts untried actions, or only the actions whose probability is greater than a threshold

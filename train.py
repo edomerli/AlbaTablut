@@ -48,10 +48,14 @@ if __name__ == '__main__':
     BLACK_AI_PATH = Path('./ckpts/black_model.ckpt')
 
     if WHITE_AI_PATH.is_file():
-        ai_white.alphazero = AlphaZeroNet.load_from_checkpoint(WHITE_AI_PATH)
+        white_alphazero = AlphaZeroNet.load_from_checkpoint(WHITE_AI_PATH)
+        ai_white.alphazero = white_alphazero
+        ai_black.opponent = white_alphazero
         print("Loaded white model")
     if BLACK_AI_PATH.is_file():
-        ai_black.alphazero = AlphaZeroNet.load_from_checkpoint(BLACK_AI_PATH)
+        black_alphazero = AlphaZeroNet.load_from_checkpoint(BLACK_AI_PATH)
+        ai_black.alphazero = black_alphazero
+        ai_white.opponent = black_alphazero
         print("Loaded black model")
 
     ai_white.alphazero.eval()
@@ -77,12 +81,10 @@ if __name__ == '__main__':
                 action, pred_win_rate, root_pi = ai_white.MCTS(board)
                 # print("White's turn played with pred win rate", pred_win_rate)
                 z += 1
-                print(f"{z} - W: {action},     ", end='')
 
             else:
                 action, pred_win_rate, root_pi = ai_black.MCTS(board)
                 # print("Black's turn played with pred win rate", pred_win_rate)
-                print(f"B: {action}")
 
             
             # print(f"Time taken for action: {time.process_time() - start}")

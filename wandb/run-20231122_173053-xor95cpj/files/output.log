@@ -1,0 +1,33 @@
+  | Name        | Type       | Params
+-------------------------------------------
+0 | conv_block  | Sequential | 3.7 K
+1 | res_blocks  | Sequential | 2.7 M
+2 | policy_head | Sequential | 422 K
+3 | value_head  | Sequential | 10.8 K
+-------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+12.384    Total estimated model params size (MB)
+D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\call.py:54: Detected KeyboardInterrupt, attempting graceful shutdown...
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x000001C0556F5900>
+Traceback (most recent call last):
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\utils\data\dataloader.py", line 1478, in __del__
+    self._shutdown_workers()
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\utils\data\dataloader.py", line 1437, in _shutdown_workers
+    self._mark_worker_as_unavailable(worker_id, shutdown=True)
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\utils\data\dataloader.py", line 1379, in _mark_worker_as_unavailable
+    assert self._workers_status[worker_id] or (self._persistent_workers and shutdown)
+AttributeError: '_MultiProcessingDataLoaderIter' object has no attribute '_workers_status'
+D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loggers\wandb.py:389: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+  | Name        | Type       | Params
+-------------------------------------------
+0 | conv_block  | Sequential | 3.7 K
+1 | res_blocks  | Sequential | 2.7 M
+2 | policy_head | Sequential | 422 K
+3 | value_head  | Sequential | 10.8 K
+-------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+12.384    Total estimated model params size (MB)

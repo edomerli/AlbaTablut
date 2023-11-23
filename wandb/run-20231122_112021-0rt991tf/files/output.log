@@ -1,0 +1,113 @@
+  | Name        | Type       | Params
+-------------------------------------------
+0 | conv_block  | Sequential | 3.7 K
+1 | res_blocks  | Sequential | 2.7 M
+2 | policy_head | Sequential | 422 K
+3 | value_head  | Sequential | 10.8 K
+-------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+12.384    Total estimated model params size (MB)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 1:   4%|███                                                                        | 6/147 [00:06<02:25,  0.97it/s, v_num=91tf]
+D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\call.py:54: Detected KeyboardInterrupt, attempting graceful shutdown...
+D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loggers\wandb.py:389: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\callbacks\model_checkpoint.py:639: Checkpoint directory .\TablutRL\0rt991tf\checkpoints exists and is not empty.
+  | Name        | Type       | Params
+-------------------------------------------
+0 | conv_block  | Sequential | 3.7 K
+1 | res_blocks  | Sequential | 2.7 M
+2 | policy_head | Sequential | 422 K
+3 | value_head  | Sequential | 10.8 K
+-------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+

@@ -1,0 +1,13 @@
+  | Name        | Type       | Params
+-------------------------------------------
+0 | conv_block  | Sequential | 3.7 K
+1 | res_blocks  | Sequential | 2.7 M
+2 | policy_head | Sequential | 422 K
+3 | value_head  | Sequential | 10.8 K
+-------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+12.384    Total estimated model params size (MB)
+D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\connectors\data_connector.py:492: Your `val_dataloader`'s sampler has shuffling enabled, it is strongly recommended that you turn shuffling off for val/test dataloaders.
+

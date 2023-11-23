@@ -39,5 +39,5 @@ WIDTH = 0
 
 DIRS = [[-1, 0], [0, -1], [0, 1], [1, 0]]
 
-AI_BUDGET = 200    # 1600 is how many simulation AlphaZero uses
+AI_BUDGET = 500    # 1600 is how many simulation AlphaZero uses
 NUM_ACTIONS = 9 * 9 * 32

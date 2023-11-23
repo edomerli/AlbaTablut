@@ -27,11 +27,18 @@ def data_board_to_one_hot_board(board_string):
     
     return torch.from_numpy(tensor).float()
 
-def data_action_to_action_dist(action):
+def literal_to_pos_action(literal):
+    return (ord(literal[0].lower()) - ord('a'), int(literal[1]) - 1)
+
+def data_action_to_action_dist(action, literal_form=True):
     """Convert an action to a one-hot encoding."""
 
-    pos_start = (ord(action[0][0].lower()) - ord('a'), int(action[0][1]) - 1)
-    pos_end = (ord(action[1][0].lower()) - ord('a'), int(action[1][1]) - 1)
+    if literal_form:
+        pos_start = literal_to_pos_action(action[0])
+        pos_end = literal_to_pos_action(action[1])
+    else:
+        pos_start = action[0]
+        pos_end = action[1]
 
     tensor = np.zeros((9, 9, 32))  
             
@@ -46,6 +53,7 @@ def data_action_to_action_dist(action):
         i += 8 + 16
     
     else:
+        print(action)
         raise ValueError
             
     # print(f"Action {action} i.e. pos {pos_start} to {pos_end} is encoded as {i}")

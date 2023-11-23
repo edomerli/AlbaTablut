@@ -1,0 +1,70 @@
+  | Name        | Type       | Params
+-------------------------------------------
+0 | conv_block  | Sequential | 3.7 K
+1 | res_blocks  | Sequential | 2.7 M
+2 | policy_head | Sequential | 422 K
+3 | value_head  | Sequential | 10.8 K
+-------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+12.384    Total estimated model params size (MB)
+Epoch 0:   0%|                                                                                               | 0/622 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\merli\OneDrive\Desktop\Github repos\TablutRL\train_data.py", line 84, in <module>
+    trainer_white.fit(white_alphazero, white_dataloader)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 544, in fit
+    call._call_and_handle_interrupt(
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\call.py", line 44, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 580, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 989, in _run
+    results = self._run_stage()
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1035, in _run_stage
+    self.fit_loop.run()
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\fit_loop.py", line 202, in run
+    self.advance()
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\fit_loop.py", line 359, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\training_epoch_loop.py", line 136, in run
+    self.advance(data_fetcher)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\training_epoch_loop.py", line 240, in advance
+    batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 187, in run
+    self._optimizer_step(batch_idx, closure)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 265, in _optimizer_step
+    call._call_lightning_module_hook(
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\call.py", line 157, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\core\module.py", line 1282, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\core\optimizer.py", line 151, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\strategies\strategy.py", line 230, in optimizer_step
+    return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\plugins\precision\precision.py", line 117, in optimizer_step
+    return optimizer.step(closure=closure, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\optim\optimizer.py", line 373, in wrapper
+    out = func(*args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\optim\optimizer.py", line 76, in _use_grad
+    ret = func(self, *args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\optim\adam.py", line 143, in step
+    loss = closure()
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\plugins\precision\precision.py", line 104, in _wrap_closure
+    closure_result = closure()
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 140, in __call__
+    self._result = self.closure(*args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\torch\utils\_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 126, in closure
+    step_output = self._step_fn()
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 315, in _training_step
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\trainer\call.py", line 309, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+  File "D:\Users\edo\envs\rl\lib\site-packages\pytorch_lightning\strategies\strategy.py", line 382, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+  File "C:\Users\merli\OneDrive\Desktop\Github repos\TablutRL\AlphaZeroNet.py", line 173, in training_step
+    'train/lr': self.scheduler.get_last_lr()[0]})
+AttributeError: 'ReduceLROnPlateau' object has no attribute 'get_last_lr'

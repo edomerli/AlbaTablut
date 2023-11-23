@@ -1,0 +1,58 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.13
+    cli_version: 0.16.0
+    framework: lightning
+    is_jupyter_run: false
+    is_kaggle_kernel: true
+    start_time: 1700670654.067238
+    t:
+      1:
+      - 1
+      - 9
+      - 55
+      - 103
+      2:
+      - 1
+      - 9
+      - 55
+      - 103
+      3:
+      - 7
+      - 13
+      - 23
+      4: 3.10.13
+      5: 0.16.0
+      8:
+      - 2
+      - 3
+      - 5
+      13: windows-amd64
+    m:
+    - 1: trainer/global_step
+      6:
+      - 3
+input_shape:
+  desc: null
+  value:
+  - 3
+  - 9
+  - 9
+num_actions:
+  desc: null
+  value: 2592
+num_res_block:
+  desc: null
+  value: 9
+num_filters:
+  desc: null
+  value: 128
+num_fc_units:
+  desc: null
+  value: 128
+learning_rate:
+  desc: null
+  value: 0.001

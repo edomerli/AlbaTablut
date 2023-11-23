@@ -1,0 +1,45 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.13",
+    "heartbeatAt": "2023-11-22T09:24:03.932742",
+    "startedAt": "2023-11-22T09:24:00.194447",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\merli\\OneDrive\\Desktop\\Github repos\\TablutRL\\train_data.py",
+    "codePathLocal": "train_data.py",
+    "codePath": "train_data.py",
+    "git": {
+        "remote": "https://github.com/edomerli/TablutRL.git",
+        "commit": "c03b3de33711a8b6ff0ae11132e0569d013f01d2"
+    },
+    "email": "merliedoardo@gmail.com",
+    "root": "C:/Users/merli/OneDrive/Desktop/Github repos/TablutRL",
+    "host": "LAPTOP-MUTQV4F9",
+    "username": "merli",
+    "executable": "D:\\Users\\edo\\envs\\rl\\python.exe",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 400.0,
+        "min": 0.0,
+        "max": 1801.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 400.0,
+            "min": 0.0,
+            "max": 1801.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 237.22655868530273,
+            "used": 172.0551528930664
+        }
+    },
+    "memory": {
+        "total": 19.91135025024414
+    }
+}

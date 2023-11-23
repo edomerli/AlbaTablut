@@ -71,7 +71,7 @@ class AlphaZeroNet(pl.LightningModule):
         num_res_block: int = 19,
         num_filters: int = 256,
         num_fc_units: int = 256,
-        # gomoku: bool = False,
+        learning_rate: float = 1e-3,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()    # save all hyperparameters to self.hparams for checkpointing 
@@ -139,7 +139,9 @@ class AlphaZeroNet(pl.LightningModule):
 
         self.apply(initialize_weights)
 
-        self.optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        self.optimizer = torch.optim.Adam(self.parameters(), lr=learning_rate)
+        # self.scheduler = torch.optim.lr_scheduler.OneCycleLR(self.optimizer, max_lr=learning_rate, total_steps=scheduler_steps)
+        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, verbose=True)
 
 
     def forward(self, x: torch.Tensor) -> NetworkOutputs:
@@ -163,16 +165,36 @@ class AlphaZeroNet(pl.LightningModule):
 
         pred_pi_logits, pred_v = self(board)
 
-        loss = self._losses(pred_pi_logits, torch.squeeze(pred_v), target_pi, target_v)
-        self.log('train_loss', loss)
+        policy_loss, value_loss = self._losses(pred_pi_logits, torch.squeeze(pred_v), target_pi, target_v)
+        loss = policy_loss + value_loss
+        self.log_dict({'train/loss': loss, 
+                       'train/policy_loss': policy_loss,
+                       'train/value_loss': value_loss,
+                       'train/lr': self.optimizer.param_groups[0]['lr']})
+
+        return loss
+
+    def validation_step(self, val_batch, batch_idx):
+        
+        board, target_pi, target_v = val_batch
+
+        pred_pi_logits, pred_v = self(board)
+
+        policy_loss, value_loss = self._losses(pred_pi_logits, torch.squeeze(pred_v), target_pi, target_v)
+        loss = policy_loss + value_loss
+        self.log_dict({'val/loss': loss, 
+                       'val/policy_loss': policy_loss,
+                       'val/value_loss': value_loss
+                       })
 
         return loss
 
     def _losses(self, pred_pi_logits, pred_v, target_pi, target_v):
-        policy_loss = nn.functional.cross_entropy(pred_pi_logits, target_pi)
+        policy_loss = nn.functional.cross_entropy(pred_pi_logits, target_pi, label_smoothing=0.1)
         value_loss = nn.functional.mse_loss(pred_v, target_v)
-        return policy_loss + value_loss
+        return policy_loss, value_loss
     
     def configure_optimizers(self) -> OptimizerLRScheduler:
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
-        return optimizer
+        return {'optimizer': self.optimizer,
+                'lr_scheduler': self.scheduler,
+                'monitor': 'train/loss'}
