@@ -69,7 +69,7 @@ if __name__ == "__main__":
     # connect to server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.connect(server_address)
-        player_name="Edo"
+        player_name="AlbaTablut"
         sock.send(struct.pack('>i', len(player_name)))
         sock.send(player_name.encode())
 
